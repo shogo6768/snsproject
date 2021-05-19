@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block customcss %}
+    <link rel="stylesheet" href="{% static 'style.css' %}">
+{% endblock customcss %}
+
+{% block content %}
+<div class="container">
+    <div class="alert alert-success" role="alert">
+        <p>タイトル：{{object.title}}</p>
+        <p>投稿者：{{object.user}}</p>
+        <p>コメント：{{object.content}}</p>
+
+        {% if request.user in object.like.all %}
+        <a href="{% url 'like-detail' object.pk %}" class="like-btn add-color" tabindex="-1" role="button" aria-disabled="true"><i class="fas fa-heart"></i></a>{{object.like.count}}
+        {% else %}
+        <a href="{% url 'like-detail' object.pk %}" class="like-btn" tabindex="-1" role="button" aria-disabled="true"><i class="far fa-heart"></i></a>{{object.like.count}}
+        {% endif %}
+
+        {% if object.user in connection.0.following.all %}
+        <a href="{% url 'follow-detail' object.pk %}" class="btn btn-danger ms-3" tabindex="-1" role="button" aria-disabled="true">フォロー解除</a>
+        {% else %}
+        <a href="{% url 'follow-detail' object.pk %}" class="btn btn-primary ms-3" tabindex="-1" role="button" aria-disabled="true">フォロー</a>
+        {% endif %}
+
+        {% if object.user == request.user %}
+        <a href="{% url 'update' object.pk %}" class="btn btn-primary ms-3" tabindex="-1" role="button" aria-disabled="true">編集</a>
+        <a href="{% url 'delete' object.pk %}" class="btn btn-danger ms-3" tabindex="-1" role="button" aria-disabled="true">削除</a>
+        {% endif %}
+    </div>
+</div>
+{% endblock content %}
